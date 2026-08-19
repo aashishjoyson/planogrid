@@ -1,0 +1,21 @@
+# A single 8GB consumer GPU (e.g. this project's dev machine: RTX 5060
+# Laptop, sm_120). Smaller batch, disk-cached dataset to keep VRAM headroom.
+# Activate with: $env:PLANOGRID_PROFILE = "local_8gb"
+#
+# `workers` is deliberately much lower than the base default (8): each
+# PyTorch dataloader worker is a separate process holding its own copy of
+# the dataset/transform state, and on a laptop sharing its ~32GB system RAM
+# with everything else running, 8 of them was enough to drop free RAM to
+# under 500MB during a real run here. cloud_t4 keeps the higher worker count
+# since Colab/Kaggle instances have RAM to spare for it.
+
+training:
+  defaults:
+    batch: 8
+    device: 0
+    cache: disk
+    workers: 2
+
+inference:
+  pipeline:
+    device: 0

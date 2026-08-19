@@ -1,0 +1,12 @@
+# Development tooling — linting, type-checking, testing. Not needed at runtime.
+#
+#   pip install -r requirements/base.txt -r requirements/dev.txt
+
+pytest==9.1.1
+pytest-cov==7.1.0
+httpx==0.28.1            # required by fastapi.testclient.TestClient
+ruff==0.16.0
+black==26.5.1
+mypy==2.3.0
+types-PyYAML==6.0.12.20260724
+pre-commit==4.6.1

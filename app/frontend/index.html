@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Planogrid - Live Detection Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="stage-backdrop" id="stageBackdrop" hidden>
+    <div class="stage-card">
+      <svg class="stage-logo" id="stageLogo" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="1" y="1" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="8.7" y="1" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="16.4" y="1" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="1" y="8.7" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="16.4" y="8.7" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="1" y="16.4" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="8.7" y="16.4" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+        <rect x="16.4" y="16.4" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+      </svg>
+      <p class="stage-title">Analyzing shelf photo</p>
+      <ul class="stage-list" id="stageList">
+        <li class="stage-item" data-stage="product"><span class="stage-dot"></span><span class="stage-text">Running product detector</span></li>
+        <li class="stage-item" data-stage="gap"><span class="stage-dot"></span><span class="stage-text">Running gap detector</span></li>
+        <li class="stage-item" data-stage="tag"><span class="stage-dot"></span><span class="stage-text">Running tag detector</span></li>
+        <li class="stage-item" data-stage="fuse"><span class="stage-dot"></span><span class="stage-text">Fusing composite result</span></li>
+      </ul>
+      <div class="stage-progress"><div class="stage-progress-fill" id="stageProgressFill"></div></div>
+    </div>
+  </div>
+
+  <div class="lightbox-backdrop" id="lightboxBackdrop" hidden>
+    <div class="lightbox-frame">
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+      <img id="lightboxImage" alt="" />
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+      <div class="lightbox-crops" id="lightboxCrops" hidden></div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <rect x="1" y="1" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="8.7" y="1" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="16.4" y="1" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="1" y="8.7" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="16.4" y="8.7" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="1" y="16.4" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="8.7" y="16.4" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+            <rect x="16.4" y="16.4" width="6.6" height="6.6" rx="1.4" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand-name">Planogrid</span>
+      </div>
+      <p class="tagline">Retail shelf intelligence, live detection dashboard</p>
+    </header>
+
+    <main class="bento">
+      <section class="card card--upload">
+        <h2>Upload a shelf photo</h2>
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image">
+          <input type="file" id="fileInput" accept="image/*" hidden />
+          <svg viewBox="0 0 24 24" width="28" height="28" class="dropzone-icon" aria-hidden="true">
+            <path d="M12 3v12m0-12 4.5 4.5M12 3 7.5 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 16v2.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <p class="dropzone-hint">Drag &amp; drop a photo, or click to choose one</p>
+        </div>
+        <p class="samples-label">Or try a sample</p>
+        <div class="samples-row" id="samplesRow"></div>
+      </section>
+
+      <section class="card card--results">
+        <h2>Detection result</h2>
+        <div class="results-empty" id="resultsEmpty">
+          <p>Upload a photo or pick a sample to run live detection.</p>
+        </div>
+        <div class="results-loading" id="resultsLoading" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          <p>Running detection…</p>
+        </div>
+        <div class="results-content" id="resultsContent" hidden>
+          <img id="resultImage" alt="Annotated detection result" />
+          <div class="confidence-list" id="confidenceList"></div>
+        </div>
+      </section>
+
+      <section class="card card--full card--zoom" id="zoomCard" hidden>
+        <h2>Zoom into each detector</h2>
+        <p class="card-subtitle">Same photo, one detector at a time. Click any panel to inspect it full-size.</p>
+        <div class="zoom-row" id="zoomRow"></div>
+      </section>
+
+      <section class="card card--full card--insights" id="insightsCard" hidden>
+        <h2>Insight report</h2>
+        <p class="card-subtitle">Generated from this photo's real detection output, not a canned summary.</p>
+        <div class="insights-grid">
+          <div class="insights-narrative" id="insightsNarrative"></div>
+          <div class="insights-numeric" id="insightsNumeric"></div>
+        </div>
+        <div class="insights-3d-wrap">
+          <div class="insights-3d" id="insights3d"></div>
+        </div>
+      </section>
+
+      <section class="card card--tile">
+        <span class="tile-label" style="color:#F59E0B">Products</span>
+        <span class="tile-value" id="tileProductValue">-</span>
+      </section>
+      <section class="card card--tile">
+        <span class="tile-label" style="color:#3B82F6">Gaps</span>
+        <span class="tile-value" id="tileGapValue">-</span>
+      </section>
+      <section class="card card--tile">
+        <span class="tile-label" style="color:#14B8A6">Tags</span>
+        <span class="tile-value" id="tileTagValue">-</span>
+      </section>
+      <section class="card card--tile">
+        <span class="tile-label">Inference time</span>
+        <span class="tile-value" id="tileLatencyValue">-</span>
+      </section>
+
+      <section class="card card--full">
+        <h2>How a photo becomes a result</h2>
+        <p class="card-subtitle">
+          Three independent specialist detectors, not one shared model, because the training data
+          for products, gaps, and tags never overlaps. Merging them into one model would teach it that
+          products are "background" wherever gap or tag data was labeled. Each runs separately, then
+          fuses into one result.
+        </p>
+        <div class="pipeline3d" id="pipeline3d">
+          <div class="p3d-node p3d-source">
+            <span class="p3d-icon">📷</span>
+            <span>Shelf photo</span>
+          </div>
+          <div class="p3d-arrow" aria-hidden="true"></div>
+          <div class="p3d-stage">
+            <div class="p3d-node p3d-detector" style="--accent:#F59E0B">
+              <span class="p3d-icon">▣</span>
+              <span>Product detector</span>
+              <small>YOLO26 · SKU-110K</small>
+            </div>
+            <div class="p3d-node p3d-detector" style="--accent:#3B82F6">
+              <span class="p3d-icon">▢</span>
+              <span>Gap detector</span>
+              <small>YOLO26 · 3 sources</small>
+            </div>
+            <div class="p3d-node p3d-detector" style="--accent:#14B8A6">
+              <span class="p3d-icon">🏷</span>
+              <span>Tag detector</span>
+              <small>YOLO26 · 4 sources</small>
+            </div>
+          </div>
+          <div class="p3d-arrow" aria-hidden="true"></div>
+          <div class="p3d-node p3d-fusion">
+            <span class="p3d-icon">⬡</span>
+            <span>Composite fusion</span>
+          </div>
+          <div class="p3d-arrow" aria-hidden="true"></div>
+          <div class="p3d-node p3d-result">
+            <span class="p3d-icon">✓</span>
+            <span>Annotated result</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card card--half">
+        <h2>Model comparison</h2>
+        <p class="card-subtitle">Every axis from each detector's held-out test evaluation, no cherry-picking one number.</p>
+        <div class="chart-wrap chart-wrap--radar">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </section>
+
+      <section class="card card--half">
+        <h2>Why three detectors, not one</h2>
+        <p class="card-subtitle">
+          A unified model trained on the union of all three datasets would see zero product boxes in
+          every gap-labeled image, and vice versa. It would learn "no label here" means "nothing to
+          detect," actively suppressing recall. Training three single-class specialists on only the
+          data where their class is exhaustively labeled avoids that trap entirely.
+        </p>
+        <div class="reason-grid">
+          <div class="reason-item">
+            <span class="reason-num" style="color:#F59E0B">1.73M</span>
+            <span class="reason-label">product boxes in SKU-110K, zero gap/tag labels</span>
+          </div>
+          <div class="reason-item">
+            <span class="reason-num" style="color:#3B82F6">3,505</span>
+            <span class="reason-label">gap images across 3 independently-labeled sources</span>
+          </div>
+          <div class="reason-item">
+            <span class="reason-num" style="color:#14B8A6">1,685</span>
+            <span class="reason-label">tag images, harmonized to one canonical class</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card card--full">
+        <h2>Model status &amp; training curves</h2>
+        <div class="status-grid" id="statusGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

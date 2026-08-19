@@ -1,0 +1,38 @@
+# Detector configuration. `registry_name` is resolved via core.registry at
+# runtime — swap yolo26 for yolo11 (or any future entry) here, no code
+# changes. See DESIGN.md §7.
+
+product_detector:
+  registry_name: yolo26 # yolo26 | yolo11
+  task: product
+  weights: checkpoints/product/best.pt
+  confidence_threshold: 0.35
+  iou_threshold: 0.5 # ignored by yolo26's NMS-free head; kept for yolo11 comparability
+  image_size: 640
+
+gap_detector:
+  registry_name: yolo26
+  task: empty_gap
+  weights: checkpoints/gap/best.pt
+  # F1-confidence curve (experiments/gap/*/test_eval/BoxF1_curve.png) is flat
+  # at ~0.82 across conf 0.15-0.6 and only peaks at 0.407 by a hair — 0.40
+  # was needlessly conservative and was silently dropping real gaps on
+  # borderline shelf photos. 0.25 sits on the same plateau with no measured
+  # precision cost, at meaningfully higher recall.
+  confidence_threshold: 0.25
+  iou_threshold: 0.5
+  image_size: 640
+
+tag_detector:
+  registry_name: yolo26
+  task: price_tag
+  weights: checkpoints/tag/best.pt
+  confidence_threshold: 0.30
+  iou_threshold: 0.5
+  image_size: 640
+
+composite:
+  # A product box >90% contained in a gap box is detector noise, not a real
+  # conflict (the three detectors share no classes) — see core.geometry
+  # .containment_ratio and DESIGN.md §7.2.
+  containment_overlap_threshold: 0.9

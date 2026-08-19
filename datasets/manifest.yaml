@@ -1,0 +1,155 @@
+# Pinned dataset registry. Every entry is a citable, verified source — a
+# source silently updating or vanishing should make the adapter fail loudly
+# with this file's identifiers, not fetch something different. See
+# DESIGN.md §6.1.
+#
+# `version: latest` means the adapter resolves the numeric-highest version at
+# download time (Roboflow projects churn — cuhk-00cw9/price-tag-mpq14 alone
+# has 16 versions at last check) and records exactly what it resolved to in
+# <dest>/.manifest_resolved.json, so a run stays reproducible after the fact
+# even though the pin itself is a moving target. Set an explicit integer to
+# freeze a version once you've picked one for a real training run.
+#
+# Every workspace/project/ref below was queried live against the real Kaggle,
+# Roboflow, and HuggingFace APIs while building this manifest — not copied
+# blind from the roadmap PDF.
+
+kaggle:
+  - name: hitl-supermarket-shelves
+    dataset_ref: "humansintheloop/supermarket-shelves-dataset"
+    license: "CC0 1.0"
+    role: tag_detector_seed
+    description: >
+      45 images, 11,743 boxes, Product + Price classes. Also the source of
+      the bundled zero-credential sample set (assets/samples/) — see §6.4.
+    dest: datasets/raw/hitl_supermarket_shelves
+
+roboflow:
+  - name: fyp-empty-shelf-497
+    workspace: fyp-ormnr
+    project: supermarket-empty-shelf-detector
+    version: latest # highest confirmed at manifest time: 4
+    format: yolov8
+    license: "per Roboflow project"
+    role: gap_detector
+    source_labels: ["100- O-O-S"]
+    description: "497-image seed set, class 'out-of-stock instances'. Battle-tested community baseline."
+    dest: datasets/raw/roboflow_fyp_497
+
+  - name: fyp-empty-shelf-975
+    workspace: fyp-nrna1
+    project: empty-shelf-detector-pbyj7
+    version: latest # highest confirmed: 2
+    format: yolov8
+    license: "per Roboflow project"
+    role: gap_detector
+    source_labels: ["Out-of-Stock-Instances"]
+    description: "975 images, larger empty-shelf training set."
+    dest: datasets/raw/roboflow_fyp_975
+
+  - name: dsjourney-empty-spaces
+    workspace: dsjourney
+    project: empty-spaces-detection-in-shelf-data
+    version: latest # highest confirmed: 5
+    format: yolov8
+    license: "per Roboflow project"
+    role: gap_detector
+    source_labels: ["emptySpaces"]
+    description: "300 images. Ships a pretrained model too, useful as a day-one sanity check."
+    dest: datasets/raw/roboflow_dsjourney
+
+  - name: shelf-product-45cls
+    workspace: roboflow-ngkro
+    project: shelf-product
+    version: latest # only version: 1
+    format: yolov8
+    license: "per Roboflow project"
+    role: cross_validation
+    source_labels: ["Empty Shelf", "Price", "Discount Price", "+ 42 product classes"]
+    description: >
+      ~1,300 images, 45 classes co-locating Empty Shelf AND Price/Discount
+      Price. Not used to train the V1.0 specialists (see DESIGN.md §2.3) —
+      kept as a cross-validation set and the seed for the V2 unified-model
+      ablation (§19).
+    dest: datasets/raw/roboflow_shelf_product
+
+  - name: price-tag-rnt
+    workspace: rnt-group
+    project: price-tag-detection-all-data
+    version: latest # highest confirmed: 2
+    format: yolov8
+    license: "CC BY 4.0"
+    role: tag_detector
+    source_labels: ["price-tag"]
+    description: "49 images, single price-tag class."
+    dest: datasets/raw/roboflow_price_tag_rnt
+
+  - name: price-tag-cuhk
+    workspace: cuhk-00cw9
+    project: price-tag-mpq14
+    version: latest # highest confirmed: 16
+    format: yolov8
+    license: "CC BY 4.0"
+    role: tag_detector
+    source_labels: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."]
+    description: "81 images, 11 digit classes — price-digit recognition as detection, an OCR alternative."
+    dest: datasets/raw/roboflow_price_tag_cuhk
+
+  - name: price-tag-nimes
+    workspace: nimes
+    project: price_tag-kvox2
+    version: latest # only version: 1
+    format: yolov8
+    license: "CC BY 4.0"
+    role: tag_detector
+    source_labels: ["price-tag"]
+    description: "311 images + a pretrained model."
+    dest: datasets/raw/roboflow_price_tag_nimes
+
+  - name: price-tag-andophine
+    workspace: andophine
+    project: pricetag-ohmyf
+    version: latest # only version: 1
+    format: yolov8
+    license: "CC BY 4.0"
+    role: tag_detector
+    source_labels: ["pricetag"]
+    description: "326 images."
+    dest: datasets/raw/roboflow_price_tag_andophine
+
+huggingface:
+  - name: foduucom-shelf-reference
+    repo_id: "foduucom/product-detection-in-shelf-yolov8"
+    repo_type: model
+    license: "per model card"
+    role: reference_pretrained
+    description: >
+      Pretrained YOLOv8 shelf product/empty detector — Week-1 sanity-check
+      baseline (run it on sample images before any training exists), not
+      used as training data. See DESIGN.md §6.1.
+    dest: checkpoints/reference/foduucom
+
+# NOTE on SKU-110K (product_detector's real training data): it is NOT fetched
+# through this manifest. `ultralytics` ships a native auto-downloader —
+# training/trainer.py references the bundled `SKU-110K.yaml` dataset config
+# directly, which pulls the correct, complete, already-YOLO-formatted
+# train/val/test split (8,219/588/2,936 images, ~13.6GB) on first use. The
+# Voxel51 HF mirror this manifest originally pointed at turned out to be the
+# *test split only* (2,941 images) — confirmed while building Phase 3 — and
+# would have been silently wrong as a training source. Ultralytics' own
+# mechanism is both correct and less code, so it's used instead of a custom
+# CSV->YOLO converter. See DESIGN.md §7, §9.
+
+# Reserved for V2 extension datasets fetched by plain HTTP (Grozi-120, RPC,
+# Freiburg Groceries — see DESIGN.md §19). Empty for the V1.0 baseline; the
+# DirectAdapter class is implemented and unit-tested regardless, per the
+# roadmap's "support direct download" requirement.
+direct: []
+
+sample:
+  description: >
+    Zero-credential real-image path. 5-10 CC0-licensed photos drawn from
+    hitl-supermarket-shelves, committed directly under assets/samples/ — no
+    network call, no credentials. Used for demo, integration tests, and CI.
+    Never synthetic — see DESIGN.md §6.4, ADR-007.
+  dest: assets/samples

@@ -1,0 +1,36 @@
+/*
+ * Planogrid design tokens — CSS custom properties.
+ * Mirrors tokens.json. Consumed by docs pages and any plain-HTML surfaces.
+ * The Streamlit theme (app/frontend/theme/) reads tokens.json directly;
+ * this file exists for non-Python/browser contexts.
+ */
+
+:root {
+  /* Color */
+  --pg-color-primary: #F59E0B;
+  --pg-color-primary-hover: #D97706;
+  --pg-color-primary-muted: #FBBF2433;
+
+  --pg-color-surface: #0F172A;
+  --pg-color-surface-elevated: #1E293B;
+  --pg-color-surface-border: #334155;
+
+  --pg-color-text-primary: #F8FAFC;
+  --pg-color-text-secondary: #CBD5E1;
+  --pg-color-text-muted: #94A3B8;
+
+  --pg-color-ok: #10B981;
+  --pg-color-missing-tag: #EF4444;
+  --pg-color-misaligned: #F97316;
+  --pg-color-gap: #3B82F6;
+
+  /* Typography */
+  --pg-font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --pg-font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --pg-font-mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, monospace;
+
+  /* Radius */
+  --pg-radius-sm: 6px;
+  --pg-radius-md: 10px;
+  --pg-radius-lg: 16px;
+}

@@ -1,0 +1,36 @@
+# Split/processing behavior for TRAINING data. This is distinct from
+# datasets/manifest.yaml, which pins WHERE each dataset comes from and is
+# consumed by scripts/download_datasets.py — this file governs what happens
+# to a dataset AFTER acquisition, and which acquired sources feed which
+# detector. `sources` entries reference manifest.yaml `name` fields.
+
+split:
+  train: 0.8
+  val: 0.1
+  test: 0.1
+  seed: 0
+  # Falls back to this stratified split only where a source has no official
+  # partition of its own — SKU-110K's own train/val/test split is used as-is.
+  strategy: stratified_by_source
+
+processed_dir: datasets/processed
+
+detectors:
+  product:
+    # Not manifest-sourced — ultralytics' native SKU-110K.yaml auto-downloader
+    # supplies the full, correctly-split, pre-converted dataset directly
+    # during training. See datasets/manifest.yaml's note under `huggingface:`.
+    sources: []
+    ultralytics_builtin: SKU-110K.yaml
+  gap:
+    sources: [fyp-empty-shelf-497, fyp-empty-shelf-975, dsjourney-empty-spaces]
+  tag:
+    # price-tag-cuhk is deliberately excluded: its 11 classes are individual
+    # digit glyphs (0-9, "."), not a single price-tag box per image, so it
+    # can't be merged into this single-class detector without a separate
+    # union-of-digit-boxes transform. Reserved for the "price-digit
+    # recognition as detection" OCR-alternative experiment instead — see
+    # DESIGN.md §19 and datasets/manifest.yaml's entry for it.
+    sources: [hitl-supermarket-shelves, price-tag-rnt, price-tag-nimes, price-tag-andophine]
+  cross_validation:
+    sources: [shelf-product-45cls]

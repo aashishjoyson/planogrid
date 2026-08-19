@@ -1,0 +1,20 @@
+# OCR engines. All five sit behind models/ocr/base.py's OCREngine interface and
+# are selected via configs/ocr.yaml — install only the ones you plan to run or
+# benchmark. `rapidocr` alone is sufficient for the default pipeline.
+#
+#   pip install -r requirements/ocr.txt
+#
+# NOTE on PaddleOCR / GPU: paddlepaddle-gpu is pinned at 2.6.2 on PyPI while
+# PaddleOCR 3.x requires the paddlepaddle 3.x runtime, and no paddlepaddle-gpu
+# 3.x wheel exists for Windows as of this writing. paddlepaddle (CPU) below
+# installs and runs fine; GPU-accelerated PaddleOCR is not achievable on this
+# stack today. RapidOCR runs the identical PP-OCRv5 weights through
+# ONNXRuntime instead, with full GPU support — see DESIGN.md ADR-002.
+
+rapidocr==3.9.2                # default engine — ONNXRuntime + PP-OCRv5 weights, no Paddle dependency
+
+easyocr==1.7.2                  # simplest install, good cross-check / fallback
+pytesseract==0.3.13             # also requires the Tesseract binary on PATH — see docs/troubleshooting.md
+paddleocr==3.7.0                # CPU-only on this stack, see note above
+paddlepaddle==3.3.1
+surya-ocr==0.22.1               # widest multilingual coverage, heaviest model

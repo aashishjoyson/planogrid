@@ -1,0 +1,15 @@
+# Streamlit dashboard defaults. See DESIGN.md §13.
+
+theme:
+  tokens_path: assets/brand/tokens.json
+
+defaults:
+  confidence_threshold: 0.35
+  show_product_boxes: true
+  show_gap_boxes: true
+  show_tag_boxes: true
+  show_compliance_overlay: true
+
+upload:
+  max_file_size_mb: 15
+  allowed_extensions: [".jpg", ".jpeg", ".png"]

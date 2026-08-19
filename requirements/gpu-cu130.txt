@@ -1,0 +1,21 @@
+# GPU-accelerated PyTorch, CUDA 13.0 (covers Blackwell / sm_120 — e.g. RTX 50-series
+# laptop and desktop GPUs — and everything older back through Ada/Ampere/Turing).
+#
+# IMPORTANT: `pip install torch` alone resolves to a CPU-ONLY wheel on Windows
+# (and on Linux without an explicit index). Always install via this file:
+#
+#   pip install -r requirements/base.txt
+#   pip install -r requirements/gpu-cu130.txt
+#
+# Install gpu-cu130.txt AFTER base.txt so this torch build wins over whatever
+# CPU-only torch ultralytics may have pulled in transitively.
+#
+# On an older GPU where cu130 doesn't apply, swap the index URL and the
+# "+cu130" suffix below for cu121/cu126/cu128 — see
+# https://pytorch.org/get-started/locally/ for the current matrix.
+# For a CPU-only machine, skip this file entirely; base.txt's transitive
+# torch install is sufficient (see configs/profiles/cpu.yaml).
+
+--extra-index-url https://download.pytorch.org/whl/cu130
+torch==2.13.0+cu130
+torchvision==0.28.0+cu130

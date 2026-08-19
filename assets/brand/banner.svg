@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Planogrid — Retail Shelf Intelligence">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <pattern id="dotgrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#94A3B8" opacity="0.18"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="320" fill="url(#bgGrad)"/>
+  <rect width="1280" height="320" fill="url(#dotgrid)"/>
+
+  <!-- Mark -->
+  <g transform="translate(80,100)">
+    <rect x="0"  y="0"  width="34" height="34" rx="7" fill="#F59E0B"/>
+    <rect x="41" y="0"  width="34" height="34" rx="7" fill="#F59E0B"/>
+    <rect x="82" y="0"  width="34" height="34" rx="7" fill="#F59E0B"/>
+
+    <rect x="0"  y="41" width="34" height="34" rx="7" fill="#F59E0B"/>
+    <rect x="41" y="41" width="34" height="34" rx="7" fill="none" stroke="#94A3B8" stroke-width="3" stroke-dasharray="5 5"/>
+    <rect x="82" y="41" width="34" height="34" rx="7" fill="#F59E0B"/>
+
+    <rect x="0"  y="82" width="34" height="34" rx="7" fill="#F59E0B"/>
+    <rect x="41" y="82" width="34" height="34" rx="7" fill="#F59E0B"/>
+    <rect x="82" y="82" width="34" height="34" rx="7" fill="#F59E0B"/>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <text x="238" y="172" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="68" font-weight="700" letter-spacing="-1.5" fill="#F8FAFC">Planogrid</text>
+  <text x="240" y="206" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="19" font-weight="500" fill="#94A3B8">Retail Shelf Intelligence — Detection &#183; OCR &#183; Compliance</text>
+
+  <!-- Decorative detection-overlay motif -->
+  <g stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9">
+    <polyline points="840,78 840,50 868,50"/>
+    <polyline points="1172,50 1200,50 1200,78"/>
+    <polyline points="840,242 840,270 868,270"/>
+    <polyline points="1200,242 1200,270 1172,270"/>
+  </g>
+
+  <!-- box: product / ok -->
+  <rect x="875" y="90" width="130" height="60" rx="4" fill="#10B981" fill-opacity="0.10" stroke="#10B981" stroke-width="2"/>
+  <text x="877" y="82" font-family="'JetBrains Mono','Cascadia Code',ui-monospace,monospace" font-size="12" fill="#10B981">product 0.97</text>
+
+  <!-- box: gap -->
+  <rect x="930" y="165" width="110" height="55" rx="4" fill="#3B82F6" fill-opacity="0.10" stroke="#3B82F6" stroke-width="2"/>
+  <text x="932" y="235" font-family="'JetBrains Mono','Cascadia Code',ui-monospace,monospace" font-size="12" fill="#3B82F6">gap 0.91</text>
+
+  <!-- box: missing tag -->
+  <rect x="1030" y="95" width="95" height="50" rx="4" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="1032" y="89" font-family="'JetBrains Mono','Cascadia Code',ui-monospace,monospace" font-size="12" fill="#EF4444">missing_tag</text>
+
+  <!-- accent bar -->
+  <rect x="0" y="316" width="1280" height="4" fill="#F59E0B"/>
+</svg>

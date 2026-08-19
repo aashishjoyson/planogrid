@@ -1,0 +1,24 @@
+# Compliance rule engine. Each rule implements Rule.evaluate() and is
+# independently toggled here — see DESIGN.md §4.5.
+
+rules:
+  missing_tag:
+    enabled: true
+    severity: critical
+    max_distance_px: 150
+
+  orphan_tag:
+    enabled: true
+    severity: warning
+
+  out_of_stock:
+    enabled: true
+    severity: critical
+
+  price_mismatch:
+    # Controlled demo only — requires a user-supplied reference CSV
+    # (product/slot -> expected price). Off by default; the UI and reports
+    # must label it a demo, never a general capability. See DESIGN.md §2, §4.5.
+    enabled: false
+    severity: warning
+    reference_csv: null

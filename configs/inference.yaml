@@ -1,0 +1,25 @@
+# End-to-end pipeline behavior. See DESIGN.md §4.4, §11.
+
+pipeline:
+  device: 0
+  crop_margin_px: 8
+  upscale_factor: 3.0
+  upscale_interpolation: cubic # cv2.INTER_CUBIC
+  grayscale_before_ocr: true
+
+rows:
+  y_tolerance: 0.6 # fraction of median row-box-height, see core.geometry.cluster_into_rows
+
+association:
+  max_match_cost: 150.0 # cost ceiling for core.geometry.solve_assignment — "no plausible match" beyond this
+
+price_parsing:
+  allow_chars: "0123456789.,$€"
+  currency_symbols: ["$", "€", "₹"]
+
+output:
+  save_annotated_image: true
+  save_json: true
+  save_csv: true
+  save_pdf_report: false # opt-in, reportlab-based
+  output_dir: outputs

@@ -1,0 +1,51 @@
+# Core runtime — installed in every environment (CPU, GPU, Docker, Colab/Kaggle).
+# CUDA-accelerated torch is deliberately NOT here — see gpu-cu130.txt and the
+# warning in that file about `pip install torch` silently resolving to CPU-only
+# on Windows.
+#
+#   pip install -r requirements/base.txt
+
+# Detection (pulls in a CPU-only torch as a transitive dep if gpu-cu130.txt
+# hasn't been installed first — install order matters, see docs/training.md)
+ultralytics==8.4.110
+
+# Image / array processing
+opencv-python==5.0.0.93
+numpy==2.3.5 # ceiling set by roboflow==1.4.0 (needs <2.4); floor set by scipy==1.18.0 (needs >=2.0.0)
+scipy==1.18.0
+
+# Contracts, config, geometry
+pydantic==2.13.4
+pydantic-settings==2.14.2
+pyyaml==6.0.3
+
+# Data & reporting
+pandas==3.0.5
+reportlab==5.0.0
+
+# Visualization / annotation overlays
+supervision==0.29.1
+matplotlib==3.11.1
+
+# Experiment tracking (TensorBoard always on; wandb only activates if
+# WANDB_API_KEY is set at runtime — see training/callbacks.py)
+tensorboard==2.21.0
+wandb==0.28.1
+
+# API
+fastapi==0.140.13
+uvicorn[standard]==0.51.0
+python-multipart==0.0.32
+
+# UI
+streamlit==1.60.0
+
+# Dataset acquisition
+kaggle==2.2.4
+roboflow==1.4.0
+huggingface_hub==1.25.1
+
+# Shared utilities
+python-dotenv==1.2.2
+rich==15.0.0
+requests==2.34.2

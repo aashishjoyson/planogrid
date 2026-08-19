@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" role="img" aria-label="Planogrid logo">
+  <g>
+    <rect x="0"  y="0"  width="28" height="28" rx="6" fill="#F59E0B"/>
+    <rect x="34" y="0"  width="28" height="28" rx="6" fill="#F59E0B"/>
+    <rect x="68" y="0"  width="28" height="28" rx="6" fill="#F59E0B"/>
+
+    <rect x="0"  y="34" width="28" height="28" rx="6" fill="#F59E0B"/>
+    <rect x="34" y="34" width="28" height="28" rx="6" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-dasharray="4 4"/>
+    <rect x="68" y="34" width="28" height="28" rx="6" fill="#F59E0B"/>
+
+    <rect x="0"  y="68" width="28" height="28" rx="6" fill="#F59E0B"/>
+    <rect x="34" y="68" width="28" height="28" rx="6" fill="#F59E0B"/>
+    <rect x="68" y="68" width="28" height="28" rx="6" fill="#F59E0B"/>
+  </g>
+  <text x="116" y="66" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="42" font-weight="700" letter-spacing="-1" fill="#F8FAFC">Planogrid</text>
+</svg>

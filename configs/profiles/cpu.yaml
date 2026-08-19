@@ -1,0 +1,14 @@
+# No CUDA device available. Training is impractically slow on this profile
+# beyond a smoke test; it exists so the pipeline and test suite run correctly
+# in CPU-only CI. Activate with: $env:PLANOGRID_PROFILE = "cpu"
+
+training:
+  defaults:
+    batch: 4
+    device: cpu
+    cache: false
+    amp: false
+
+inference:
+  pipeline:
+    device: cpu

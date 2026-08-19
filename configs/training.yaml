@@ -1,0 +1,37 @@
+# V1.0 baseline: pretrained checkpoint + Ultralytics default hyperparameters
+# per detector. No LR schedule or augmentation search here by design — see
+# DESIGN.md §9 and §19 (Future Work) for where that goes instead.
+
+defaults:
+  epochs: 100
+  patience: 20 # early stopping
+  image_size: 640
+  optimizer: auto # Ultralytics auto-selects per its own defaults
+  amp: true
+  seed: 0
+  workers: 8
+  save_period: -1 # only last.pt + best.pt, not a checkpoint every epoch
+  batch: 16 # overridden per compute profile — see profiles/*.yaml
+  device: 0
+
+detectors:
+  product:
+    base_weights: yolo26s.pt
+    # No data_yaml here — training/trainer.py resolves this detector to
+    # ultralytics' bundled "SKU-110K.yaml", which auto-downloads the full,
+    # correctly-split, already-YOLO-formatted dataset directly. See
+    # datasets/manifest.yaml's note under `huggingface:`.
+  gap:
+    base_weights: yolo26s.pt
+    # No data_yaml here either — training/trainer.py always derives this
+    # detector's data.yaml path via training.datasets.prepare, which builds
+    # it (if missing) from configs/datasets.yaml's `detectors.gap.sources`.
+  tag:
+    base_weights: yolo26s.pt
+    # Same as gap — see training.datasets.prepare and
+    # configs/datasets.yaml's `detectors.tag.sources`.
+
+tracking:
+  tensorboard: true
+  wandb: auto # "auto" = on iff WANDB_API_KEY is set; never required
+  experiment_root: experiments

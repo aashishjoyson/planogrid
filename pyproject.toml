@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "planogrid"
+version = "0.1.0"
+description = "Retail shelf intelligence: detection, OCR, and compliance in one pipeline."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "AGPL-3.0-or-later"
+authors = [{ name = "Planogrid contributors" }]
+
+# Dependencies are intentionally not declared here. This project pins exact
+# versions in requirements/*.txt (base, gpu-cu130, ocr, dev) because the GPU
+# build needs a non-PyPI --extra-index-url that PEP 621 [project.dependencies]
+# can't express cleanly, and keeping one mechanism for all four layers avoids
+# two dependency lists drifting apart. See requirements/base.txt and
+# DESIGN.md §14 for the rationale. Install with:
+#   pip install -e . -r requirements/base.txt -r requirements/gpu-cu130.txt
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["core*", "models*", "training*", "inference*", "datasets*", "app*"]
+
+# --- Ruff (lint) ---
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "N"]
+ignore = [
+    "E501", # black owns line length
+    "B008", # FastAPI's own convention: File(...)/Depends(...)/Query(...) as
+            # a default value is a marker object FastAPI evaluates specially
+            # per-request, not an eager function call — false positive here.
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "models", "training", "inference", "datasets", "app"]
+
+# --- Black (format) ---
+[tool.black]
+line-length = 100
+target-version = ["py311", "py312"]
+
+# --- Mypy (type check) ---
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+# Third-party CV/ML libraries without (complete) type stubs.
+module = ["cv2.*", "ultralytics.*", "supervision.*", "roboflow.*", "kaggle.*", "rapidocr.*", "easyocr.*", "paddleocr.*", "pytesseract.*", "surya.*"]
+ignore_missing_imports = true
+
+# --- Pytest ---
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "gpu: requires a CUDA device (deselected automatically when none is present)",
+    "slow: exercises real model weights or network I/O",
+]
+
+# --- Coverage ---
+[tool.coverage.run]
+source = ["core", "models", "training", "inference", "datasets", "app"]
+omit = ["*/tests/*"]

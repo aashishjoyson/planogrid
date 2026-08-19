@@ -1,0 +1,12 @@
+# Colab / Kaggle free-tier T4 or P100, 12-16GB VRAM. Default profile
+# ($PLANOGRID_PROFILE unset falls back to this) — see DESIGN.md §9.
+
+training:
+  defaults:
+    batch: 32
+    device: 0
+    cache: ram
+
+inference:
+  pipeline:
+    device: 0

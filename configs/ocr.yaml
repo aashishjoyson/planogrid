@@ -1,0 +1,24 @@
+# OCR engine selection + per-engine settings. `engine` is resolved via
+# core.registry at runtime. See DESIGN.md §8, ADR-002.
+
+engine: rapidocr # rapidocr | paddleocr | easyocr | tesseract | surya
+
+rapidocr:
+  use_gpu: true
+  lang: en
+
+paddleocr:
+  use_gpu: false # no GPU wheel for this stack — see requirements/ocr.txt
+  lang: en
+  use_angle_cls: true
+
+easyocr:
+  gpu: true
+  lang_list: [en]
+
+tesseract:
+  lang: eng
+  psm: 7 # single text line — matches a cropped price tag
+
+surya:
+  lang: [en]
