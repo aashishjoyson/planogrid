@@ -11,8 +11,8 @@ ultralytics==8.4.110
 
 # Image / array processing
 opencv-python==5.0.0.93
-numpy==2.3.5 # ceiling set by roboflow==1.4.0 (needs <2.4); floor set by scipy==1.18.0 (needs >=2.0.0)
-scipy==1.18.0
+numpy==2.3.5 # ceiling set by roboflow==1.4.0 (needs <2.4); floor set by scipy==1.17.1 (needs >=2.0.0)
+scipy==1.17.1 # CI matrix tests 3.11 and 3.12 — scipy 1.18.0 requires Python >=3.12, this is the latest version supporting both
 
 # Contracts, config, geometry
 pydantic==2.13.4
