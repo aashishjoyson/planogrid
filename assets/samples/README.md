@@ -6,8 +6,8 @@ Kaggle **"Supermarket Shelves Dataset"** by Humans in the Loop —
 licensed **CC0 1.0** (public domain).
 
 This is the zero-credential path described in `DESIGN.md §6.4` — committed directly
-in git so a fresh clone can run the Streamlit app, the inference CLI, and the
-integration/CI test suite with no API keys at all. It is a demo/test fixture set,
+in git so a fresh clone can run the dashboard (`app/frontend/`), the inference CLI, and
+the integration/CI test suite with no API keys at all. It is a demo/test fixture set,
 not training data: the full 45-image source (plus its bounding-box annotations) is
 pulled separately and at full resolution by
 

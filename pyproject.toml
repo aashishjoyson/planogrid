@@ -57,7 +57,7 @@ plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
 # Third-party CV/ML libraries without (complete) type stubs.
-module = ["cv2.*", "ultralytics.*", "supervision.*", "roboflow.*", "kaggle.*", "rapidocr.*", "easyocr.*", "paddleocr.*", "pytesseract.*", "surya.*"]
+module = ["cv2.*", "ultralytics.*", "supervision.*", "roboflow.*", "kaggle.*", "rapidocr.*", "easyocr.*", "paddleocr.*", "pytesseract.*", "surya.*", "scipy.*"]
 ignore_missing_imports = true
 
 # --- Pytest ---
